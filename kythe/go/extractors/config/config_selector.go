@@ -46,7 +46,7 @@ func findConfig(configPath, repoDir string) (*ecpb.ExtractionConfiguration, erro
 		if defaultConfig, ok := base.DefaultConfig(repoDir); ok {
 			return load(strings.NewReader(defaultConfig))
 		}
-		return nil, fmt.Errorf("failed to find a supported builder for repo %s", repoDir)
+		return nil, fmt.Errorf("failed to find a supported builder for repo %s %s", repoDir, err)
 	} else if err != nil {
 		return nil, fmt.Errorf("opening config file: %v", err)
 	}

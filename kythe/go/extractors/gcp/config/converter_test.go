@@ -24,10 +24,10 @@ import (
 	"kythe.io/kythe/go/test/testutil"
 )
 
-const testDataDir = "testdata"
+const testDataDir = "kythe/go/extractors/gcp/config/testdata"
 
 // Also test some yaml configs checked in elsewhere.
-const examplesDir = "../../../../extractors/gcp/examples"
+const examplesDir = "kythe/extractors/gcp/examples"
 
 func TestYAMLConversion(t *testing.T) {
 	testcases := []testcase{

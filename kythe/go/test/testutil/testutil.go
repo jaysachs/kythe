@@ -262,9 +262,9 @@ func TestFilePath(t *testing.T, path string) string {
 		t.Fatalf("Failed to resolve path %s: %v", path, err)
 	}
 	base := filepath.ToSlash(pwd)
-	i := strings.LastIndex(base, "kythe/go")
+	i := strings.LastIndex(base, "/kythe/")
 	if i > 0 {
-		base = base[:i]
+		base = base[:(i+1)]
 	}
 	return filepath.Join(filepath.FromSlash(base), filepath.FromSlash(path))
 }

@@ -47,7 +47,7 @@ func TestDefaultConfig(t *testing.T) {
 			if !ok {
 				t.Fatalf("Unsupported builder %s", tc.Name)
 			}
-			fn := testutil.TestFilePath(t, conf)
+			fn := testutil.TestFilePath(t, "kythe/go/extractors/config/base/" + conf)
 			expected, err := ioutil.ReadFile(fn)
 			if err != nil {
 				t.Fatalf("Failed to open config file: %s", fn)

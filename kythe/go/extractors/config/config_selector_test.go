@@ -51,7 +51,7 @@ func TestFindConfig(t *testing.T) {
 		// lazy.
 		testcase{
 			name:          "maven-passed",
-			configFile:    "base/testdata/mvn2_config.json",
+			configFile:    "kythe/go/extractors/config/base/testdata/mvn2_config.json",
 			expectedProto: loadProto("base/testdata/mvn2_config.json", t),
 		},
 		testcase{
@@ -61,14 +61,14 @@ func TestFindConfig(t *testing.T) {
 		testcase{
 			name:          "maven-missing-config",
 			expectedError: true,
-			configFile:    "base/testdata/sir_not_appearing_in_this_repo.json",
+			configFile:    "kythe/go/extractors/config/base/testdata/sir_not_appearing_in_this_repo.json",
 		},
 		// Even if there's a build.gradle file, if the config is directly
 		// passed in, then trust the user.
 		testcase{
 			name:          "passed-overrides-default",
 			buildFile:     "gradle.build",
-			configFile:    "base/testdata/mvn2_config.json",
+			configFile:    "kythe/go/extractors/config/base/testdata/mvn2_config.json",
 			expectedProto: loadProto("base/testdata/mvn2_config.json", t),
 		},
 		testcase{
@@ -81,7 +81,11 @@ func TestFindConfig(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			td := makeTestDir(tc.buildFile, t)
 			defer os.RemoveAll(td)
-			p, err := findConfig(tc.configFile, td)
+			fp := tc.configFile
+			if fp != "" {
+			   fp = testutil.TestFilePath(t, fp);
+			}
+			p, err := findConfig(fp, td)
 			if err != nil && !tc.expectedError {
 				t.Fatalf("Unexpected error finding config %v", err)
 			} else if err == nil && tc.expectedError {
@@ -118,6 +122,7 @@ func makeTestDir(buildFile string, t *testing.T) string {
 
 func loadProto(path string, t *testing.T) *ecpb.ExtractionConfiguration {
 	t.Helper()
+	path = "kythe/go/extractors/config/" + path
 	tf := testutil.TestFilePath(t, path)
 	f, err := os.Open(tf)
 	if err != nil {

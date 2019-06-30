@@ -27,7 +27,7 @@ import (
 	"kythe.io/kythe/go/test/testutil"
 )
 
-const testDataDir = "testdata"
+const testDataDir = "kythe/go/extractors/config/preprocessor/modifier/testdata"
 
 func TestBuildGradleHasKythe(t *testing.T) {
 	testcases := []struct {
