@@ -6,6 +6,8 @@ exports_files([
     "empty.kzip",
     "garbage_unit.kzip",
     "malformed.kzip",
+    "missing-pbunit.kzip",
+    "missing-unit.kzip",
     "stringset.kzip",
     "stringset_with_empty_file.kzip",
 ])
