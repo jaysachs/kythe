@@ -87,16 +87,6 @@ StatusOr<IndexWriter> KzipWriter::Create(absl::string_view path) {
   return libzip::Error(error).ToStatus();
 }
 
-/* static */
-StatusOr<IndexWriter> KzipWriter::FromSource(zip_source_t* source,
-                                             const int flags) {
-  libzip::Error error;
-  if (auto archive = zip_open_from_source(source, flags, error.get())) {
-    return IndexWriter(absl::WrapUnique(new KzipWriter(archive)));
-  }
-  return error.ToStatus();
-}
-
 KzipWriter::KzipWriter(zip_t* archive) : archive_(archive) {}
 
 KzipWriter::~KzipWriter() {

@@ -35,12 +35,6 @@ class KzipWriter : public IndexWriterInterface {
   /// \brief Constructs a Kzip IndexWriter which will create and write to
   /// \param path Path to the file to create. Must not currently exist.
   static StatusOr<IndexWriter> Create(absl::string_view path);
-  /// \brief Constructs an IndexWriter from the libzip source pointer.
-  /// \param source zip_source_t to use as backing store.
-  /// See https://libzip.org/documentation/zip_source.html for ownership.
-  /// \param flags Flags to use when opening `source`.
-  static StatusOr<IndexWriter> FromSource(zip_source_t* source,
-                                          int flags = ZIP_CREATE | ZIP_EXCL);
 
   /// \brief Destroys the KzipWriter.
   ~KzipWriter() override;
