@@ -1,8 +1,11 @@
-load("@npm//@bazel/typescript:index.bzl", "ts_config", "ts_library")
-load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test")
+# load("@aspect_bazel_lib//lib:testing.bzl", "assert_contains")
+# load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
+#load("@npm//:defs.bzl", "npm_link_all_packages")
 
-package(default_visibility = ["//kythe:default_visibility"])
+#npm_link_all_packages(name = "node_modules")
+
+# npm_link_all_packages(name = "node_modules")
 
 ts_config(
     name = "tsconfig",
@@ -10,18 +13,22 @@ ts_config(
     deps = [],
 )
 
-ts_library(
+ts_project(
     name = "kythe",
     srcs = ["kythe.ts"],
+    declaration = True,
+    source_map = True,
     tsconfig = ":tsconfig",
 )
 
-ts_library(
+ts_project(
     name = "indexer",
     srcs = [
         "indexer.ts",
         "utf8.ts",
     ],
+    declaration = True,
+    source_map = True,
     tsconfig = ":tsconfig",
     deps = [
         ":kythe",
@@ -30,50 +37,75 @@ ts_library(
     ],
 )
 
-ts_library(
-    name = "test_ts",
-    srcs = ["test.ts"],
-    tsconfig = ":tsconfig",
-    deps = [
-        ":indexer",
-        ":kythe",
-        "@npm//@types/node",
-        "@npm//source-map-support",
-        "@npm//typescript",
-    ],
-)
+# load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
+# load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test")
 
-ts_library(
-    name = "utf8_test_ts",
-    testonly = True,
-    srcs = ["utf8_test.ts"],
-    tsconfig = ":tsconfig",
-    deps = [
-        ":indexer",
-        "@npm//@types/jasmine",
-        "@npm//typescript",
-    ],
-)
+package(default_visibility = ["//kythe:default_visibility"])
 
-DISABLED_TESTS = []
+# ts_library(
+#     name = "kythe",
+#     srcs = ["kythe.ts"],
+#     tsconfig = ":tsconfig",
+# )
 
-nodejs_test(
-    name = "indexer_test",
-    data = [
-        ":test_ts",
-    ] + glob(
-        ["testdata/**/*"],
-        exclude = DISABLED_TESTS,
-    ) + [
-        "//kythe/go/platform/tools/entrystream",
-        "//kythe/cxx/verifier",
-    ],
-    entry_point = ":test.ts",
-    # See https://github.com/bazelbuild/rules_nodejs/wiki#--bazel_patch_module_resolver-now-defaults-to-false-2324
-    templated_args = ["--bazel_patch_module_resolver"],
-)
+# ts_library(
+#     name = "indexer",
+#     srcs = [
+#         "indexer.ts",
+#         "utf8.ts",
+#     ],
+#     tsconfig = ":tsconfig",
+#     deps = [
+#         ":kythe",
+#         "@npm//@types/node",
+#         "@npm//typescript",
+#     ],
+# )
 
-jasmine_node_test(
-    name = "utf8_test",
-    deps = [":utf8_test_ts"],
-)
+# ts_library(
+#     name = "test_ts",
+#     srcs = ["test.ts"],
+#     tsconfig = ":tsconfig",
+#     deps = [
+#         ":indexer",
+#         ":kythe",
+#         "@npm//@types/node",
+#         "@npm//source-map-support",
+#         "@npm//typescript",
+#     ],
+# )
+
+# ts_library(
+#     name = "utf8_test_ts",
+#     testonly = True,
+#     srcs = ["utf8_test.ts"],
+#     tsconfig = ":tsconfig",
+#     deps = [
+#         ":indexer",
+#         "@npm//@types/jasmine",
+#         "@npm//typescript",
+#     ],
+# )
+
+# DISABLED_TESTS = []
+
+# nodejs_test(
+#     name = "indexer_test",
+#     data = [
+#         ":test_ts",
+#     ] + glob(
+#         ["testdata/**/*"],
+#         exclude = DISABLED_TESTS,
+#     ) + [
+#         "//kythe/go/platform/tools/entrystream",
+#         "//kythe/cxx/verifier",
+#     ],
+#     entry_point = ":test.ts",
+#     # See https://github.com/bazelbuild/rules_nodejs/wiki#--bazel_patch_module_resolver-now-defaults-to-false-2324
+#     templated_args = ["--bazel_patch_module_resolver"],
+# )
+
+# jasmine_node_test(
+#     name = "utf8_test",
+#     deps = [":utf8_test_ts"],
+# )

@@ -8,6 +8,55 @@ load("//:version.bzl", "MAX_VERSION", "MIN_VERSION", "check_version")
 # Bazel and our maximum supported version of Bazel.
 check_version(MIN_VERSION, MAX_VERSION)
 
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+http_archive(
+    name = "aspect_rules_ts",
+    sha256 = "6406905c5f7c5ca6dedcca5dacbffbf32bb2a5deb77f50da73e7195b2b7e8cbc",
+    strip_prefix = "rules_ts-1.0.5",
+    url = "https://github.com/aspect-build/rules_ts/archive/refs/tags/v1.0.5.tar.gz",
+)
+
+##################
+# rules_ts setup #
+##################
+# Fetches the rules_ts dependencies.
+# If you want to have a different version of some dependency,
+# you should fetch it *before* calling this.
+# Alternatively, you can skip calling this function, so long as you've
+# already fetched all the dependencies.
+load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
+
+rules_ts_dependencies(
+    # This keeps the TypeScript version in-sync with the editor, which is typically best.
+    ts_version_from = "//:package.json",
+
+    # Alternatively, you could pick a specific version, or use
+    # load("@aspect_rules_ts//ts:repositories.bzl", "LATEST_VERSION")
+    # ts_version = LATEST_VERSION
+)
+
+# Fetch and register node, if you haven't already
+load("@rules_nodejs//nodejs:repositories.bzl", "DEFAULT_NODE_VERSION", "nodejs_register_toolchains")
+
+nodejs_register_toolchains(
+    name = "node",
+    node_version = DEFAULT_NODE_VERSION,
+)
+
+load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
+
+npm_translate_lock(
+    name = "npm",
+    pnpm_lock = "//:pnpm-lock.yaml",
+)
+
+load("@npm//:repositories.bzl", "npm_repositories")
+
+npm_repositories()
+
+
+
 load("//:setup.bzl", "kythe_rule_repositories", "remote_java_repository")
 
 kythe_rule_repositories()
@@ -21,9 +70,9 @@ load("//tools/build_rules/external_tools:external_tools_configure.bzl", "externa
 
 external_tools_configure()
 
-load("@npm//@bazel/labs:package.bzl", "npm_bazel_labs_dependencies")
+# load("@npm//@bazel/labs:package.bzl", "npm_bazel_labs_dependencies")
 
-npm_bazel_labs_dependencies()
+# npm_bazel_labs_dependencies()
 
 load("@maven//:compat.bzl", "compat_repositories")
 

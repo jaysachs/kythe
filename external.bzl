@@ -18,7 +18,8 @@ load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_regi
 load("@rules_rust//tools/rust_analyzer:deps.bzl", "rust_analyzer_deps")
 load("@rules_rust//proto:repositories.bzl", "rust_proto_repositories")
 load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")
-load("@build_bazel_rules_nodejs//:index.bzl", "npm_install")
+
+# load("@build_bazel_rules_nodejs//:index.bzl", "npm_install")
 load(
     "@bazelruby_rules_ruby//ruby:deps.bzl",
     "rules_ruby_dependencies",
@@ -1196,12 +1197,12 @@ def _go_dependencies():
         version = "v0.0.0-20200804184101-5ec99f83aff1",
     )
 
-def _js_dependencies():
-    npm_install(
-        name = "npm",
-        package_json = "@io_kythe//:package.json",
-        package_lock_json = "@io_kythe//:package-lock.json",
-    )
+# def _js_dependencies():
+#     npm_install(
+#         name = "npm",
+#         package_json = "@io_kythe//:package.json",
+#         package_lock_json = "@io_kythe//:package-lock.json",
+#     )
 
 def _bindings():
     maybe(
@@ -1275,7 +1276,7 @@ def kythe_dependencies():
     _cc_dependencies()
     _go_dependencies()
     _java_dependencies()
-    _js_dependencies()
+    #    _js_dependencies()
 
     # proto_library, cc_proto_library, and java_proto_library rules implicitly
     # depend on @com_google_protobuf for protoc and proto runtimes.
